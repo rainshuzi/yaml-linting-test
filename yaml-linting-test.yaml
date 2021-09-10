@@ -1,3 +1,4 @@
+---
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
@@ -20,4 +21,4 @@ spec:
       command:
         - /bin/bash
       args: ["-c", "echo hello world"]
-
+      
