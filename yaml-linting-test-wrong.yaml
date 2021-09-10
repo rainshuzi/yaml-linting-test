@@ -1,0 +1,49 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: tekton-task-assignment
+spec:
+  stepTemplate:
+    env:
+      - name: "dir"
+        value: "/workspace/k8s/"
+      - name: "originfile"
+        value: "run-steps-as-non-root.yaml"
+      - name: "taskfile"
+        value: "run-steps-as-non-root-task-only.yaml"
+      - name: "alpinetaskfile"
+        value: "run-steps-as-non-root-alpine-task.yaml"
+  steps:
+    - name: create-dir
+      image: quay.io/ibmgaragecloud/alpine-curl
+      command:
+        - mkdir
+      args: ["-p", "/workspace/k8s/"]
+
+    - name: retrieve-yaml
+      image: quay.io/ibmgaragecloud/alpine-curl
+      command:
+        - wget
+      args: ["https://raw.githubusercontent.com/tektoncd/pipeline/main/examples/v1beta1/taskruns/run-steps-as-non-root.yaml", "-O", "${dir}${originfile}"]
+   
+    - name: extract-task
+      image: quay.io/ibmgaragecloud/alpine-curl
+      script: |
+        #!/usr/bin/env sh
+        head -n 24 ${dir}${originfile} > ${dir}${taskfile}
+    - name: cat
+      image: quay.io/ibmgaragecloud/alpine-curl
+      command:
+        - cat
+      args: ["${dir}${taskfile}"]
+
+    - name: swap-image
+      image: quay.io/ibmgaragecloud/alpine-curl
+      script: |
+        #!/usr/bin/env sh
+        sed 's/ubuntu/quay.io\/ibmgaragecloud\/alpine-curl/g' ${dir}${taskfile} > ${dir}${alpinetaskfile}
+    - name: cat2
+      image: quay.io/ibmgaragecloud/alpine-curl
+      command:
+        - cat
+      args: ["${dir}${alpinetaskfile}"]
