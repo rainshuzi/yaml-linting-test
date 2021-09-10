@@ -21,4 +21,3 @@ spec:
       command:
         - /bin/bash
       args: ["-c", "echo hello world"]
-      
