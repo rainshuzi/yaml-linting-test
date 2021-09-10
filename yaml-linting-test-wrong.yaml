@@ -9,7 +9,7 @@ spec:
         value: "/workspace/k8s/"
       - name: "originfile"
         value: "run-steps-as-non-root.yaml"
-      - name: "taskfile"
+    - name: "taskfile"
         value: "run-steps-as-non-root-task-only.yaml"
       - name: "alpinetaskfile"
         value: "run-steps-as-non-root-alpine-task.yaml"
@@ -18,7 +18,7 @@ spec:
       image: quay.io/ibmgaragecloud/alpine-curl
       command:
         - mkdir
-      args: ["-p", "/workspace/k8s/"]
+    args: ["-p", "/workspace/k8s/"]
 
     - name: retrieve-yaml
       image: quay.io/ibmgaragecloud/alpine-curl
@@ -32,7 +32,7 @@ spec:
         #!/usr/bin/env sh
         head -n 24 ${dir}${originfile} > ${dir}${taskfile}
     - name: cat
-      image: quay.io/ibmgaragecloud/alpine-curl
+    image: quay.io/ibmgaragecloud/alpine-curl
       command:
         - cat
       args: ["${dir}${taskfile}"]
@@ -46,4 +46,4 @@ spec:
       image: quay.io/ibmgaragecloud/alpine-curl
       command:
         - cat
-      args: ["${dir}${alpinetaskfile}"]
+    args: ["${dir}${alpinetaskfile}"]
